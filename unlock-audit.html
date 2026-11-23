@@ -121,6 +121,7 @@ h2{font-family:'Playfair Display',serif;font-weight:600;font-size:1.15rem;margin
     <input type="text" id="lname" autocomplete="family-name">
     <label for="email">Email</label>
     <input type="email" id="email" autocomplete="email" inputmode="email">
+    <label style="display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-weight:400;font-size:14px;line-height:1.4"><input type="checkbox" id="consent" style="margin-top:3px;width:auto"><span>Yes, email me my result and occasional notes from Sasha Tripp. I can unsubscribe any time.</span></label>
     <div class="err hide" id="err"></div>
     <button class="btn" id="begin">Begin</button>
     <p class="fine">No spam, and you can leave any time. Twenty questions from here.</p>
@@ -230,8 +231,9 @@ $("begin").onclick=()=>{
   const email=$("email").value.trim(),fn=$("fname").value.trim(),ln=$("lname").value.trim();
   if(!fn) return fail("What should I call you?");
   if(!/^\S+@\S+\.\S+$/.test(email)) return fail("That email doesn't look quite right — mind checking it?");
+  if(!$("consent").checked) return fail("Please check the box so I can email you your result.");
   $("err").classList.add("hide");
-  lead={first_name:fn,last_name:ln,email:email};
+  lead={first_name:fn,last_name:ln,email:email,consent:"yes"};
   // Captured BEFORE question 1 — a mid-audit drop-off is no longer a lost lead.
   post({...lead,source:"Unlock Audit",stage:"started",started_at:new Date().toISOString()});
   order=shuffle(ITEMS);idx=0;show("quiz");render();
